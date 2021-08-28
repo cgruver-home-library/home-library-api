@@ -1,0 +1,105 @@
+---
+openapi: 3.0.2
+info:
+  title: Home Library Catalog
+  version: 1.0.0
+  description: This resource manages the books that are in your home library or that
+    are available to add to your library.
+  license:
+    name: GNU GPLv3
+    url: https://www.gnu.org/licenses/gpl.txt
+paths:
+  /bookCatalog/getBookInfo/{isbn}:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bookInfo'
+          description: Book information
+    parameters:
+    - name: isbn
+      schema:
+        type: string
+      in: path
+      required: true
+  /bookCatalog/saveBookInfo:
+    description: Add a book to the Book Catalog
+    post:
+      requestBody:
+        description: Book Info to add to the catalog
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bookInfo'
+        required: true
+      responses:
+        "200":
+          description: Book Info saved to the catalog
+  /bookCatalog/deleteBookInfo/{catalogId}:
+    delete:
+      responses:
+        "200":
+          description: BookInfo Deleted
+        "404":
+          description: BookInfo not in the catalog
+    parameters:
+    - name: catalogId
+      description: Catalog ID of the BookInfo to delete from the catalog
+      schema:
+        type: string
+      in: path
+      required: true
+components:
+  schemas:
+    bookInfo:
+      title: Root Type for bookInfo
+      description: ""
+      type: object
+      properties:
+        catalogId:
+          type: string
+        title:
+          type: string
+        openLibraryUrl:
+          type: string
+        numberOfPages:
+          format: int32
+          type: integer
+        coverImageUrl:
+          type: string
+        publishDate:
+          type: string
+        inCatalog:
+          type: boolean
+        isbns:
+          type: array
+          items:
+            type: string
+        authors:
+          type: array
+          items:
+            type: object
+            properties:
+              openLibraryUrl:
+                type: string
+              name:
+                type: string
+      example:
+        catalogId: OL24385514M
+        title: Thief of time
+        openLibraryUrl: http://openlibrary.org/books/OL24385514M/Thief_of_time
+        numberOfPages: 357
+        coverImageUrl: https://covers.openlibrary.org/b/id/6636627-S.jpg
+        publishDate: "2002"
+        inCatalog: false
+        isbns:
+        - "9780061031328"
+        - "0061031321"
+        authors:
+        - openLibraryUrl: http://openlibrary.org/authors/OL25712A/Terry_Pratchett
+          name: Terry Pratchett
+tags:
+- name: Catalog
+  description: Home Library Book Catalog
